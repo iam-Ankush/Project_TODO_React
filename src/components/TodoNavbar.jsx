@@ -2,21 +2,21 @@ import { jwtDecode } from 'jwt-decode'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import DecodeToken from './DecodeToken'
 
 const TodoNavbar = () => {
     const navigate = useNavigate()
     const token  = localStorage.getItem('token')
     let userName = null
+    let role = null
     if(token){
         try {
-            // const decoded_Token = jwtDecode(token)
-            const parts = token.split('_')
-            console.log(parts)
-            if(parts.length === 4){
-                const role = parts[1]
-                userName = parts[3]
+            const user = DecodeToken(token)
+            if(user){
+                userName  = user.userName
+                role = user.role
             }
-            console.log(userName)
+            console.log(userName , role)
         } catch (error) {
             console.error("Error decoding token:", error);
         }
@@ -43,8 +43,11 @@ const TodoNavbar = () => {
                 <Link to="/todo_form"  className='mx-[20px] relative group cursor-pointer'>FORM</Link>
                 {/* <span className="absolute left-0 -bottom-1 h-0.5 w-0 bg-[#169976] transition-all duration-300 group-hover:w-full"></span> */}
                 <Link to="/todo_list" className='mx-[10px] relative group cursor-pointer'>LIST</Link>               
-                <Link to="/userList" className='mx-[10px] relative group cursor-pointer'>USERS</Link>               
-                <Link to="/adminPanel" className='mx-[10px] relative group cursor-pointer'>ADMIN_PANEL</Link>               
+                <Link to="/userList" className='mx-[10px] relative group cursor-pointer'>USERS</Link>
+                {role === 'admin' && (
+                    <Link to="/adminPanel" className='mx-[10px] relative group cursor-pointer'>ADMIN_PANEL</Link>               
+
+                )}               
             </ul>
             </div>
 

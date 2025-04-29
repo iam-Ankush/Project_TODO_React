@@ -1,6 +1,7 @@
 import { jwtDecode } from 'jwt-decode'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import generateToken from '../utils/TokenGenerator'
 
 
 const UserLogin = () => {
@@ -34,8 +35,8 @@ const UserLogin = () => {
         // const token = jwt.sign({ role: user.role, username: user.username }, 'QWERTY', { expiresIn: '1h' });
 
             // Create a mock "token" (In production, it should come from the backend)
-            const token = `mockToken_${user.id}_${user.role}_${user.username}`;
-        console.log(token)
+            const token = generateToken(user)
+        console.log(token , 'token generated')
 
         // store the token in local storage
         localStorage.setItem('token', token)
@@ -55,7 +56,7 @@ const UserLogin = () => {
     <>
     <div className='bg-[#222222] w-full min-h-screen flex justify-center items-center'>
       <div className='bg-[#000000] border border-[#169976] p-4   rounded-xl w-[30%] h-[60%] flex  flex-col  items-center text-center' >
-        <div className='text-[#169976] border-[#169976]  text-2xl font-semibold mb-4 self-center mt-4'>Login</div>
+        <div className='text-[#169976] border-[#169976]  text-2xl font-semibold mb-4 self-center mt-4'>LOGIN</div>
 
         <form action=""  className='text-[#169976] w-full mt-5 flex flex-col items-center ' onSubmit={submitLogin} >
          <div className='flex flex-col gap-3 w-full self-start px-3 py-4 '>

@@ -60,7 +60,7 @@ const UserRegister = () => {
       <div className="bg-[#222222] w-full min-h-screen flex justify-center items-center">
         <div className="bg-[#000000] border border-[#169976] p-4   rounded-xl w-[30%] h-[60%] flex  flex-col  items-center text-center">
           <div className="text-[#169976] border-[#169976]  text-2xl font-semibold mb-4 self-center mt-5">
-            Register Yourself
+            REGISTER
           </div>
 
           <form

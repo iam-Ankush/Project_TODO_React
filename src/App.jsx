@@ -11,6 +11,7 @@ import SuccessMsg from './components/SuccessMsg';
 import PrivateRoute from './components/PrivateRoute';
 import Users from './components/Users';
 import AdminPanel from './components/AdminPanel';
+import UnAuthorized from './components/UnAuthorized';
 
 function App() {
   const [listData , setListData]  = useState([])
@@ -43,14 +44,28 @@ function App() {
     <TodoNavbar />
     <Routes>
     <Route path="/" element={<Home />}></Route>
-    <Route path="/home" element={<PrivateRoute component={Home} />}></Route>
-      <Route path="/todo_form" element={<TodoForm onAddTodo={fetchTodoData}/>}></Route>
-      <Route path="/todo_list" element={<TodoList listData={listData}/>}></Route>
+    
       <Route path="/register" element={<UserRegister/>}></Route>
       <Route path="/login" element={<UserLogin/>}></Route>
       <Route path="/successmsg" element={<SuccessMsg/>}></Route>
-      <Route path="/userList" element={<Users/>}></Route>
+      <Route path="/unauthorized" element={<UnAuthorized/>}></Route>
+      <Route path="/home" element={<Home/>}></Route>
+     
+
+      {/* Private Route  for ADMIN*/}
+      <Route element={<PrivateRoute allowedRoles={['admin']} />}>
       <Route path="/adminPanel" element={<AdminPanel/>}></Route>
+      <Route path="/userList" element={<Users/>}></Route>
+      </Route>
+
+ {/* Private Route  for ADMIN & USER*/}
+ <Route element={<PrivateRoute allowedRoles={['admin' , 'user']} />}>
+ <Route path="/userList" element={<Users/>}></Route>
+ <Route path="/todo_form" element={<TodoForm onAddTodo={fetchTodoData}/>}></Route>
+ <Route path="/todo_list" element={<TodoList listData={listData}/>}></Route>
+ 
+      </Route>
+      
     </Routes>
    </BrowserRouter>
     </>
