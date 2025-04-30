@@ -16,6 +16,7 @@ import UnAuthorized from './components/UnAuthorized';
 function App() {
   const [listData , setListData]  = useState([])
   const [error , setError] = useState(null)
+  const [successMsg , setSuccessMsg] = useState(null)
 
 
   const fetchTodoData = async()=>{
@@ -26,6 +27,7 @@ function App() {
         }
 
         const data = await response.json()
+        console.log(data , 'todo data')
         setListData(data)
     } catch (error) {
         console.log('Some error occurred')
@@ -36,12 +38,63 @@ function App() {
 
   useEffect(()=>{
     fetchTodoData()
-},[])
+    if(successMsg){
+      const timer = setTimeout(() => {
+        setSuccessMsg(null)
+      }, 2000);
+      return () => clearTimeout(timer); // cleanup
+    }
+},[successMsg])
+
+
+const removeTodo = async(id)=>{
+  try {
+    const response = await fetch(`https://680e0d3bc47cb8074d91ef64.mockapi.io/react/todos/${id}`,{
+      method:'DELETE'
+    })
+    console.log(response, 'RESPONSE')
+    if(!response.ok){
+      throw new Error("Failed to delete Todo")
+
+    }
+    setSuccessMsg("Todo deleted successfully!")
+    fetchTodoData()
+  } catch (error) {
+    console.log('Error deleting todo' ,error)
+    setError(error.message)
+  }
+}
+
+
+const updateTodo = async(id, updateData)=>{
+try {
+  const response = await fetch(`https://680e0d3bc47cb8074d91ef64.mockapi.io/react/todos/${id}`,{
+    method:'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body : JSON.stringify(updateData)
+  })
+  if(!response.ok){
+    throw new Error("Failed to Update Todo")
+
+  }
+
+  setSuccessMsg("Todo Updated Succesfully")
+  fetchTodoData()
+} catch (error) {
+  console.error('Error updating todo:', error);
+    setError(error.message);
+}
+}
 
   return (
     <>
     <BrowserRouter>
     <TodoNavbar />
+    {successMsg && (
+      <SuccessMsg message={successMsg} onClose={()=> setSuccessMsg(null)} />
+    )}
     <Routes>
     <Route path="/" element={<Home />}></Route>
     
@@ -62,7 +115,7 @@ function App() {
  <Route element={<PrivateRoute allowedRoles={['admin' , 'user']} />}>
  <Route path="/userList" element={<Users/>}></Route>
  <Route path="/todo_form" element={<TodoForm onAddTodo={fetchTodoData}/>}></Route>
- <Route path="/todo_list" element={<TodoList listData={listData}/>}></Route>
+ <Route path="/todo_list" element={<TodoList listData={listData} removeTodo={removeTodo} updateTodo={updateTodo}/>}></Route>
  
       </Route>
       

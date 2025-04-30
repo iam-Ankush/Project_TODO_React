@@ -12,7 +12,8 @@ const PrivateRoute = ({allowedRoles}) => {
     }
 
     try {
-        const parts = token.split('_')
+        if(token){
+            const parts = token.split('_')
             console.log(parts)
             if(parts.length >= 3){
                
@@ -20,6 +21,8 @@ const PrivateRoute = ({allowedRoles}) => {
             }
            
             console.log(userRole)
+        }
+      
             if(allowedRoles.includes(userRole)){
                 return <Outlet />
             } else {
